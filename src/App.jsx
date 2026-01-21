@@ -9,6 +9,7 @@ import SaturnGroup from "./components/SaturnGroup";
 import InfoPanel from "./components/InfoPanel";
 import OrbitPath from "./components/OrbitPath";
 import PlanetControlPanel from "./components/PlanetControlPanel";
+import WelcomePopup from "./components/WelcomePopup";
 
 function App() {
   const [elapsed, setElapsed] = useState(0);
@@ -22,6 +23,7 @@ function App() {
   const [bodyPositions, setBodyPositions] = useState({ Sun: new THREE.Vector3(0, 0, 0) });
   const [isMuted, setIsMuted] = useState(false);
   const [showOrbitPaths, setShowOrbitPaths] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(true);
   const controlsRef = useRef();
   const audioRef = useRef();
 
@@ -48,6 +50,11 @@ function App() {
         sizeScale: 1,
       };
     });
+    // Add Sun tuning
+    base.Sun = {
+      rotationSpeed: 0.5,
+      sizeScale: 1,
+    };
     return base;
   };
 
@@ -114,7 +121,11 @@ function App() {
     };
 
     const baseRadius = radiusMap[name] ?? 0.5;
-    const sizeScale = name === "Saturn" ? tuning.Saturn.sizeScale : tuning[name]?.sizeScale ?? 1;
+    const sizeScale = name === "Sun"
+      ? tuning.Sun.sizeScale
+      : name === "Saturn"
+        ? tuning.Saturn.sizeScale
+        : tuning[name]?.sizeScale ?? 1;
     const scaledRadius = baseRadius * sizeScale * globalSizeScale;
     const dist = Math.max(4, scaledRadius * 2.5 + 4);
     const offset = new THREE.Vector3(dist, dist * 0.5, dist);
@@ -127,123 +138,231 @@ function App() {
   return (
     <>
       <audio ref={audioRef} src="/universe.mp3" loop autoPlay />
-      <button
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 20,
-          zIndex: 100,
-          padding: "12px 20px",
-          fontSize: "20px",
-          background: isPaused ? "#e74c3c" : "#27ae60",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-        onClick={() => setIsPaused((p) => !p)}
-      >
-        {isPaused ? "Resume" : "Pause"}
-      </button>
-      <button
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 180,
-          zIndex: 100,
-          padding: "12px 20px",
-          fontSize: "20px",
-          background: isMuted ? "#95a5a6" : "#3498db",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-        onClick={() => setIsMuted((m) => !m)}
-      >
-        {isMuted ? "🔇 Sound Off" : "🔊 Mute"}
-      </button>
-      <button
-        style={{
-          position: "absolute",
-          top: 70,
-          right: 20,
-          zIndex: 100,
-          padding: "10px 16px",
-          fontSize: "16px",
-          background: showPanel ? "#34495e" : "#2980b9",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-        onClick={() => setShowPanel((v) => !v)}
-      >
-        {showPanel ? "Hide Panel" : "Show Panel"}
-      </button>
-      <button
-        style={{
-          position: "absolute",
-          top: 120,
-          right: 20,
-          zIndex: 100,
-          padding: "10px 16px",
-          fontSize: "16px",
-          background: "#8e44ad",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-        onClick={() => focusOnBody(selected ?? "Sun")}
-      >
-        Focus selected
-      </button>
-      <button
-        style={{
-          position: "absolute",
-          top: 170,
-          right: 20,
-          zIndex: 100,
-          padding: "10px 16px",
-          fontSize: "16px",
-          background: "#d35400",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-        onClick={() => {
-          setSelected("Sun");
-          focusOnBody("Sun");
-        }}
-      >
-        Reset to Sun
-      </button>
-      <button
-        style={{
-          position: "absolute",
-          top: 220,
-          right: 20,
-          zIndex: 100,
-          padding: "10px 16px",
-          fontSize: "16px",
-          background: showOrbitPaths ? "#16a085" : "#7f8c8d",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-        onClick={() => setShowOrbitPaths((v) => !v)}
-      >
-        {showOrbitPaths ? "⭕ Hide Orbits" : "⭕ Show Orbits"}
-      </button>
+
+      {/* Control Panel - Right Side */}
+      {showPanel ? (
+        <div
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            zIndex: 100,
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            minWidth: "200px",
+          }}
+        >
+          {/* Playback Controls */}
+          <div style={{
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "12px",
+            padding: "12px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+          }}>
+            <div style={{
+              color: "#fff",
+              fontSize: "11px",
+              fontWeight: "600",
+              marginBottom: "8px",
+              opacity: 0.7,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}>
+              Playback
+            </div>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                fontSize: "15px",
+                background: isPaused ? "#e74c3c" : "#27ae60",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
+                marginBottom: "6px",
+                transition: "all 0.2s",
+              }}
+              onClick={() => setIsPaused((p) => !p)}
+            >
+              {isPaused ? "▶ Resume" : "⏸ Pause"}
+            </button>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                fontSize: "15px",
+                background: isMuted ? "#95a5a6" : "#3498db",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
+                transition: "all 0.2s",
+              }}
+              onClick={() => setIsMuted((m) => !m)}
+            >
+              {isMuted ? "🔇 Sound Off" : "🔊 Sound On"}
+            </button>
+          </div>
+
+          {/* View Controls */}
+          <div style={{
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "12px",
+            padding: "12px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+          }}>
+            <div style={{
+              color: "#fff",
+              fontSize: "11px",
+              fontWeight: "600",
+              marginBottom: "8px",
+              opacity: 0.7,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}>
+              View
+            </div>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                fontSize: "15px",
+                background: "#34495e",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
+                marginBottom: "6px",
+                transition: "all 0.2s",
+              }}
+              onClick={() => setShowPanel(false)}
+            >
+              👁‍🗨 Hide All Panels
+            </button>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                fontSize: "15px",
+                background: showOrbitPaths ? "#16a085" : "#7f8c8d",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
+                transition: "all 0.2s",
+              }}
+              onClick={() => setShowOrbitPaths((v) => !v)}
+            >
+              {showOrbitPaths ? "⭕ Hide Orbits" : "⭕ Show Orbits"}
+            </button>
+          </div>
+
+          {/* Camera Controls */}
+          <div style={{
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "12px",
+            padding: "12px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+          }}>
+            <div style={{
+              color: "#fff",
+              fontSize: "11px",
+              fontWeight: "600",
+              marginBottom: "8px",
+              opacity: 0.7,
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+            }}>
+              Camera
+            </div>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                fontSize: "15px",
+                background: "#8e44ad",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
+                marginBottom: "6px",
+                transition: "all 0.2s",
+              }}
+              onClick={() => focusOnBody(selected ?? "Sun")}
+            >
+              🎯 Focus Selected
+            </button>
+            <button
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                fontSize: "15px",
+                background: "#d35400",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "600",
+                transition: "all 0.2s",
+              }}
+              onClick={() => {
+                setSelected("Sun");
+                focusOnBody("Sun");
+              }}
+            >
+              ☀️ Reset to Sun
+            </button>
+          </div>
+        </div>
+      ) : (
+        // Floating eye icon when panels are hidden
+        <button
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            zIndex: 100,
+            width: "50px",
+            height: "50px",
+            padding: "0",
+            fontSize: "24px",
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(10px)",
+            color: "white",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            borderRadius: "50%",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.3s",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+          }}
+          onClick={() => setShowPanel(true)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.1)";
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.background = "rgba(0, 0, 0, 0.7)";
+          }}
+          title="Show Panels"
+        >
+          👁
+        </button>
+      )}
+
       {showPanel && (
         <PlanetControlPanel
           bodies={panelBodies}
@@ -268,7 +387,16 @@ function App() {
         <ambientLight intensity={ambientIntensity} />
         <directionalLight position={[5, 5, 5]} intensity={directionalIntensity} />
 
-        <Sun onSelect={setSelected} selectedName={selected} onPositionUpdate={handlePositionUpdate} />
+        <Sun
+          onSelect={setSelected}
+          selectedName={selected}
+          onPositionUpdate={handlePositionUpdate}
+          rotationSpeed={tuning.Sun.rotationSpeed}
+          sizeScale={tuning.Sun.sizeScale}
+          globalSizeScale={globalSizeScale}
+          timeScale={timeScale}
+          isPaused={isPaused}
+        />
         {showOrbitPaths && planets.map((planet) => (
           <OrbitPath key={`${planet.name}-orbit`} distance={planet.distance} />
         ))}
@@ -332,6 +460,9 @@ function App() {
       </Canvas>
       {selected && (
         <InfoPanel planet={selected} onClose={() => setSelected(null)} />
+      )}
+      {showWelcome && (
+        <WelcomePopup onClose={() => setShowWelcome(false)} />
       )}
     </>
   );

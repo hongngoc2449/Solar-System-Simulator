@@ -157,7 +157,26 @@ const PlanetControlPanel = ({
               isSelected={planet.name === selected}
               onSelect={onSelect}
             />
-            {planet.name !== "Sun" && (
+            {planet.name === "Sun" ? (
+              <div style={{ marginTop: 6, padding: "6px 8px", background: "rgba(255,255,255,0.03)", borderRadius: 6 }}>
+                <SliderRow
+                  label="Rotation"
+                  value={tuning.Sun.rotationSpeed}
+                  min={0}
+                  max={3}
+                  step={0.01}
+                  onChange={(v) => onTuningChange("Sun", { rotationSpeed: v })}
+                />
+                <SliderRow
+                  label="Size factor"
+                  value={tuning.Sun.sizeScale}
+                  min={0.2}
+                  max={3}
+                  step={0.05}
+                  onChange={(v) => onTuningChange("Sun", { sizeScale: v })}
+                />
+              </div>
+            ) : planet.name !== "Sun" && (
               <div style={{ marginTop: 6, padding: "6px 8px", background: "rgba(255,255,255,0.03)", borderRadius: 6 }}>
                 <SliderRow
                   label="Orbit speed"
