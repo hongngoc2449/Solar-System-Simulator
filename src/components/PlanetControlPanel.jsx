@@ -71,8 +71,9 @@ const PlanetControlPanel = ({
 
   const stats = useMemo(() => {
     const total = enriched.length;
-    const furthest = enriched.reduce((a, b) => (b.distance > a.distance ? b : a), enriched[0]);
-    const closest = enriched.reduce((a, b) => (b.distance < a.distance ? b : a), enriched[0]);
+    const planetsOnly = enriched.filter((b) => b.name !== "Sun");
+    const furthest = planetsOnly.reduce((a, b) => (b.distance > a.distance ? b : a), planetsOnly[0]);
+    const closest = planetsOnly.reduce((a, b) => (b.distance < a.distance ? b : a), planetsOnly[0]);
     const fastest = enriched.reduce((a, b) => (b.orbitSpeed > a.orbitSpeed ? b : a), enriched[0]);
     const orbiting = enriched.filter((b) => b.name !== "Sun" && b.orbitSpeed > 0);
     const slowest = orbiting.length

@@ -175,35 +175,69 @@ function App() {
             <button
               style={{
                 width: "100%",
-                padding: "10px 16px",
+                padding: "12px 16px",
                 fontSize: "15px",
-                background: isPaused ? "#e74c3c" : "#27ae60",
+                background: isPaused
+                  ? "linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)"
+                  : "linear-gradient(135deg, #27ae60 0%, #229954 100%)",
                 color: "white",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
-                marginBottom: "6px",
-                transition: "all 0.2s",
+                fontWeight: "700",
+                marginBottom: "8px",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: isPaused
+                  ? "0 4px 15px rgba(231, 76, 60, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 15px rgba(39, 174, 96, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               onClick={() => setIsPaused((p) => !p)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+                e.currentTarget.style.boxShadow = isPaused
+                  ? "0 8px 25px rgba(231, 76, 60, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)"
+                  : "0 8px 25px rgba(39, 174, 96, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = isPaused
+                  ? "0 4px 15px rgba(231, 76, 60, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 15px rgba(39, 174, 96, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)";
+              }}
             >
               {isPaused ? "▶ Resume" : "⏸ Pause"}
             </button>
             <button
               style={{
                 width: "100%",
-                padding: "10px 16px",
+                padding: "12px 16px",
                 fontSize: "15px",
-                background: isMuted ? "#95a5a6" : "#3498db",
+                background: isMuted
+                  ? "linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)"
+                  : "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
                 color: "white",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
-                transition: "all 0.2s",
+                fontWeight: "700",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: isMuted
+                  ? "0 4px 15px rgba(149, 165, 166, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 15px rgba(52, 152, 219, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               onClick={() => setIsMuted((m) => !m)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+                e.currentTarget.style.boxShadow = isMuted
+                  ? "0 8px 25px rgba(149, 165, 166, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)"
+                  : "0 8px 25px rgba(52, 152, 219, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = isMuted
+                  ? "0 4px 15px rgba(149, 165, 166, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 15px rgba(52, 152, 219, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)";
+              }}
             >
               {isMuted ? "🔇 Sound Off" : "🔊 Sound On"}
             </button>
@@ -231,35 +265,63 @@ function App() {
             <button
               style={{
                 width: "100%",
-                padding: "10px 16px",
+                padding: "12px 16px",
                 fontSize: "15px",
-                background: "#34495e",
+                background: "linear-gradient(135deg, #34495e 0%, #2c3e50 100%)",
                 color: "white",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
-                marginBottom: "6px",
-                transition: "all 0.2s",
+                fontWeight: "700",
+                marginBottom: "8px",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: "0 4px 15px rgba(52, 73, 94, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               onClick={() => setShowPanel(false)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 8px 25px rgba(52, 73, 94, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)";
+                e.currentTarget.style.background = "linear-gradient(135deg, #3d566e 0%, #34495e 100%)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = "0 4px 15px rgba(52, 73, 94, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)";
+                e.currentTarget.style.background = "linear-gradient(135deg, #34495e 0%, #2c3e50 100%)";
+              }}
             >
               👁‍🗨 Hide All Panels
             </button>
             <button
               style={{
                 width: "100%",
-                padding: "10px 16px",
+                padding: "12px 16px",
                 fontSize: "15px",
-                background: showOrbitPaths ? "#16a085" : "#7f8c8d",
+                background: showOrbitPaths
+                  ? "linear-gradient(135deg, #16a085 0%, #138d75 100%)"
+                  : "linear-gradient(135deg, #7f8c8d 0%, #5d6d7e 100%)",
                 color: "white",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
-                transition: "all 0.2s",
+                fontWeight: "700",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: showOrbitPaths
+                  ? "0 4px 15px rgba(22, 160, 133, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 15px rgba(127, 140, 141, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               onClick={() => setShowOrbitPaths((v) => !v)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+                e.currentTarget.style.boxShadow = showOrbitPaths
+                  ? "0 8px 25px rgba(22, 160, 133, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)"
+                  : "0 8px 25px rgba(127, 140, 141, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = showOrbitPaths
+                  ? "0 4px 15px rgba(22, 160, 133, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)"
+                  : "0 4px 15px rgba(127, 140, 141, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)";
+              }}
             >
               {showOrbitPaths ? "⭕ Hide Orbits" : "⭕ Show Orbits"}
             </button>
@@ -287,37 +349,59 @@ function App() {
             <button
               style={{
                 width: "100%",
-                padding: "10px 16px",
+                padding: "12px 16px",
                 fontSize: "15px",
-                background: "#8e44ad",
+                background: "linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%)",
                 color: "white",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
-                marginBottom: "6px",
-                transition: "all 0.2s",
+                fontWeight: "700",
+                marginBottom: "8px",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: "0 4px 15px rgba(142, 68, 173, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               onClick={() => focusOnBody(selected ?? "Sun")}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 8px 25px rgba(142, 68, 173, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)";
+                e.currentTarget.style.background = "linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = "0 4px 15px rgba(142, 68, 173, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)";
+                e.currentTarget.style.background = "linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%)";
+              }}
             >
               🎯 Focus Selected
             </button>
             <button
               style={{
                 width: "100%",
-                padding: "10px 16px",
+                padding: "12px 16px",
                 fontSize: "15px",
-                background: "#d35400",
+                background: "linear-gradient(135deg, #d35400 0%, #ba4a00 100%)",
                 color: "white",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
-                transition: "all 0.2s",
+                fontWeight: "700",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: "0 4px 15px rgba(211, 84, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)",
               }}
               onClick={() => {
                 setSelected("Sun");
                 focusOnBody("Sun");
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px) scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 8px 25px rgba(211, 84, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3)";
+                e.currentTarget.style.background = "linear-gradient(135deg, #e67e22 0%, #d35400 100%)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0) scale(1)";
+                e.currentTarget.style.boxShadow = "0 4px 15px rgba(211, 84, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2)";
+                e.currentTarget.style.background = "linear-gradient(135deg, #d35400 0%, #ba4a00 100%)";
               }}
             >
               ☀️ Reset to Sun
